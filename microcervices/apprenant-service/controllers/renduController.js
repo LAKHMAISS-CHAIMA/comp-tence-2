@@ -1,5 +1,6 @@
 import Rendu from '../models/Rendu.js';
 import mongoose from 'mongoose';
+import { getCompetencesByBriefId } from '../services/briefService.js';
 
 const createRendu = async (req, res) => {
     try {
@@ -14,7 +15,21 @@ const createRendu = async (req, res) => {
 const getAllRendus = async (req, res) => {
     try {
         const rendus = await Rendu.find({});
-        res.status(200).json(rendus);
+        const rendusWithCompetences = await Promise.all(
+            rendus.map(async (rendu) => {
+                let competences = [];
+                try {
+                    competences = await getCompetencesByBriefId(rendu.briefId);
+                } catch (err) {
+                    competences = [];
+                }
+                return {
+                    ...rendu.toObject(),
+                    competences
+                };
+            })
+        );
+        res.status(200).json(rendusWithCompetences);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -30,7 +45,16 @@ const getRenduById = async (req, res) => {
         if (!rendu) {
             return res.status(404).json({ error: 'Rendu non trouvé.' });
         }
-        res.status(200).json(rendu);
+        let competences = [];
+        try {
+            competences = await getCompetencesByBriefId(rendu.briefId);
+        } catch (err) {
+            competences = [];
+        }
+        res.status(200).json({
+            ...rendu.toObject(),
+            competences
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
