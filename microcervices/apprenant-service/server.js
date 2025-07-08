@@ -1,34 +1,33 @@
+import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
-// import apprenantRoutes from "./routes/apprenantRoutes.js";
-// import renduRoutes from "./routes/renduRoutes.js"
+import connectDB from './config/db.js';
+import apprenantRoutes from './routes/apprenantRoutes.js';
+// import renduRoutes from './routes/renduRoutes.js';
 import cors from 'cors';
 
 const app = express();
+const PORT = process.env.PORT || 9200;
+
+connectDB();
 
 app.use(express.json());
 app.use(cors());
 
-// app.use("/", apprenantRoutes);
-// app.use("/", renduRoutes);
+app.use('/', apprenantRoutes);
+// app.use('/', renduRoutes);
 
-const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/Microservice';
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Route non trouvée' });
+});
 
-async function connectDB() {
-    try {
-        await mongoose.connect(uri);
-        console.log('Connecté avec succès à MongoDB via Mongoose !');
-    } catch (error) {
-        console.error('Erreur de conexion Mongoose:', error);
-        process.exit(1);
-    }
-}
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Quelque chose s\'est mal passé !' });
+});
 
-connectDB();
-
-const PORT = 9200;
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
+    console.log(`Server listening on port ${PORT}`);
 });
 
 

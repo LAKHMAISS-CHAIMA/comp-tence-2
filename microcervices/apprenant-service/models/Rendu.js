@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 
 const renduSchema = new mongoose.Schema({
-    apprenantId: { type: mongoose.SchemaType.Types.ObjectId, ref: 'Apprenant' },
+    apprenantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Apprenant', required: true },
     briefId: { type: String, required: true },
     description: { type: String, required: true },
     note: { type: Number, min: 0, max: 20 },
     commentaire: { type: String, trim: true },
-    dateSoumission: Date
+    dateSoumission: { type: Date, default: Date.now }
+}, {
+    timestamps: true
 });
-export default mongoose.model('Rendu', renduSchema)
+
+const Rendu = mongoose.model('Rendu', renduSchema);
+export default Rendu;
