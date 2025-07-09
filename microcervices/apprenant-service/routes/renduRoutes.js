@@ -4,7 +4,7 @@ import Rendu from '../models/Rendu.js';
 import renduController from '../controllers/renduController.js';
 
 const router = express.Router();
-
+console.log("renduRoutes chargé !");
 router.post('/rendus', renduController.createRendu);
 router.get('/rendus', renduController.getAllRendus);
 router.get('/rendus/:id', renduController.getRenduById);

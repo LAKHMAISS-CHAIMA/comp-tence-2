@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BRIEF_SERVICE_URL = "http://localhost:9200";
+const BRIEF_SERVICE_URL = process.env.BRIEF_SERVICE_URL || 'http://localhost:9300';
 
 export const getBriefById = async (id) => {
   try {
@@ -11,11 +11,17 @@ export const getBriefById = async (id) => {
   }
 };
 
-export const getCompetencesByBrief = async (id) => {
+export async function getCompetencesByBriefId(briefId) {
   try {
-    const res = await axios.get(`${BRIEF_SERVICE_URL}/briefs/${id}`);
-    return res.data.competences; 
+    const response = await axios.get(`${BRIEF_SERVICE_URL}/briefs/${briefId}/competences`);
+    return response.data;
   } catch (error) {
-    throw new Error("Erreur lors de la récupération des compétences");
+    if (error.response) {
+      throw new Error(`Erreur Brief-Service (${error.response.status}): ${error.response.data?.error || error.response.statusText}`);
+    } else if (error.request) {
+      throw new Error('Aucune réponse du Brief-Service');
+    } else {
+      throw new Error('Erreur lors de la requête Brief-Service: ' + error.message);
+    }
   }
-};
+}

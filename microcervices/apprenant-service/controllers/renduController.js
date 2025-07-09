@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { getCompetencesByBriefId } from '../services/briefService.js';
 
 const createRendu = async (req, res) => {
+    console.log("createRendu appelé");
     try {
         const rendu = new Rendu(req.body);
         await rendu.save();
@@ -13,6 +14,7 @@ const createRendu = async (req, res) => {
 };
 
 const getAllRendus = async (req, res) => {
+    console.log("getAllRendus appelé");
     try {
         const rendus = await Rendu.find({});
         const rendusWithCompetences = await Promise.all(
