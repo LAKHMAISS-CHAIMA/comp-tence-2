@@ -1,0 +1,19 @@
+FROM node:18
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+
+# Installer les dépendances
+RUN npm install
+
+# Copier tout le code source dans le conteneur
+COPY . .
+
+# Exposer le port utilisé par l'application
+EXPOSE 9200
+
+# Démarrer l'application
+CMD ["node", "server.js"]
