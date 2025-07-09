@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BRIEF_SERVICE_URL = process.env.BRIEF_SERVICE_URL || 'http://localhost:9300';
+const BRIEF_SERVICE_URL = process.env.BRIEF_SERVICE_URL || 'http://localhost:3000';
 
 export const getBriefById = async (id) => {
   try {

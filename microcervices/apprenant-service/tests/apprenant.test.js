@@ -4,6 +4,8 @@ import app from '../server.js';
 
 describe('API Apprenant', () => {
   let server;
+  let apprenantId;
+
   beforeAll(async () => {
     server = app.listen(4000);
   });
@@ -13,12 +15,10 @@ describe('API Apprenant', () => {
     server.close();
   });
 
-  let apprenantId;
-
   it('crée un nouvel apprenant', async () => {
     const res = await request(server)
       .post('/apprenants')
-      .send({ name: 'Testeur', email: 'testeur@example.com' });
+      .send({ name: 'Testeur', email: 'testeur' + Date.now() + '@example.com' });
     expect(res.statusCode).toBe(201);
     expect(res.body.name).toBe('Testeur');
     apprenantId = res.body._id;
